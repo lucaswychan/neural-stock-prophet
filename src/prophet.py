@@ -20,11 +20,11 @@ class NeuralStockProphet:
         # LSTM model parameters
         self.epochs = epochs
         self.batch_size = batch_size
-        self.model = AttentionLSTM(self.time_steps, self.n_features)
-        self.model.compile(lr=lr)
+        self.model = AttentionLSTM(self.time_steps, self.n_features, lr)
         
         # ARIMA parameters
         self.arima_order = arima_order
+        self.arima_trend = arima_trend
         
         # combine model parameter
         self.factor = factor
@@ -32,6 +32,7 @@ class NeuralStockProphet:
     def load_data(self):
         self.train_data: Dict[str, TimeSeriesDataset] = {}
         self.test_data: Dict[str, TimeSeriesDataset] = {}
+        
         for stock_name in self.stock_names:
             self.train_data[stock_name] = TimeSeriesDataset(stock_name, self.time_steps, self.scaler, self.train_start_date, self.train_end_date)
             self.test_data[stock_name] = TimeSeriesDataset(stock_name, self.time_steps, self.scaler, self.test_start_date, self.test_end_date)

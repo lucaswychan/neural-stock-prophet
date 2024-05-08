@@ -30,7 +30,7 @@ class Attention(Layer):
 
 @keras.saving.register_keras_serializable()
 class AttentionLSTM(keras.Model):
-    def __init__(self, time_steps, n_features, **kwargs):
+    def __init__(self, time_steps, n_features, lr, **kwargs):
         super(AttentionLSTM, self).__init__(**kwargs)
         
         self.time_steps = time_steps
@@ -44,6 +44,8 @@ class AttentionLSTM(keras.Model):
         self.dropout3 = Dropout(0.2)
         self.attention = Attention(return_attention=True)
         self.outputs = Dense(units=1)
+        
+        self.compile(lr)
 
     def compile(self, lr=1e-3):
         super(AttentionLSTM, self).compile(optimizer=keras.optimizers.Adam(learning_rate=lr), loss='mean_absolute_error', metrics=[RootMeanSquaredError(), MeanAbsolutePercentageError()])
