@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import empyrical as emp
 
-class RiskParityPortfolio(rpp.RiskParityPortfolio):
+class RiskParityPortfolio:
     def __init__(self, prices, risk_distribution="eq", constraints=(None, None, None, None), seed=42):
         self.prices = prices
         
