@@ -1,4 +1,4 @@
-from dataset import TimeSeriesDataset
+from src.dataset import TimeSeriesDataset
 import matplotlib.pyplot as plt
 import os
 from sklearn.metrics import mean_absolute_error
@@ -6,7 +6,7 @@ import numpy as np
 import seaborn as sns
 from keras.layers import LSTM, Dropout, Input
 import keras
-from model import Attention
+from src.model import Attention
 
 def get_prediction_trend(model, dataset: TimeSeriesDataset):
     predictions = model.predict(dataset.X)
@@ -15,15 +15,11 @@ def get_prediction_trend(model, dataset: TimeSeriesDataset):
     return predictions
 
 
-def visualize_prediction(model, dataset: TimeSeriesDataset, file_name):
-    predictions = get_prediction_trend(model, dataset)
-    y_test = dataset.scaler.inverse_transform(dataset.y.reshape(-1, 1))
-    
-    # Visualising the results
+def visualize_results(index, y_true, y_pred, title, file_name):
     plt.figure(figsize=(12, 6))
-    plt.plot(dataset.time_index[dataset.time_steps:], y_test, color = 'red', label = 'Real Stock Price')
-    plt.plot(dataset.time_index[dataset.time_steps:], predictions, color = 'blue', label = 'Predicted Stock Price')
-    plt.title('Stock Price Prediction')
+    plt.plot(index, y_true, color = 'red', label = 'Real Stock Price')
+    plt.plot(index, y_pred, color = 'blue', label = 'Predicted Stock Price')
+    plt.title(title)
     plt.xlabel('Time')
     plt.ylabel('Stock Price')
     plt.legend()
@@ -32,9 +28,17 @@ def visualize_prediction(model, dataset: TimeSeriesDataset, file_name):
     if os.path.exists(file_path):
         os.remove(file_path)
     plt.savefig(file_path)
+    
+    print(f"The mean absolute error is {round(mean_absolute_error(y_true, y_pred), 3)}USD")
 
-    # Print the mae
-    print(f"The mean absolute error is {round(mean_absolute_error(y_test, predictions), 3)} USD")
+
+def visualize_prediction(model, dataset: TimeSeriesDataset, file_name):
+    predictions = get_prediction_trend(model, dataset)
+    y_test = dataset.scaler.inverse_transform(dataset.y.reshape(-1, 1))
+    
+    # Visualising the results
+    visualize_results(dataset.time_index[dataset.time_steps:], y_test, predictions, 'LSTM Stock Price Prediction', file_name)
+
 
 
 def visualize_timestep_importance(model, dataset: TimeSeriesDataset):

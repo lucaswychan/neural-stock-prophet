@@ -13,4 +13,5 @@ def multiplicative_decompose(data, window_length):
         
     # residual component
     residual = data / seasonal / trend
+    
     return trend, seasonal, residual
