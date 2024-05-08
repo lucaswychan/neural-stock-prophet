@@ -13,6 +13,7 @@ class NeuralStockProphet:
         self.train_start_date, self.train_end_date = train_date
         self.test_start_date, self.test_end_date = test_date
         self.time_steps = time_steps
+        self.load_data()
         
         # multiplicative decomposition parameter
         self.window_length = window_length
@@ -38,12 +39,16 @@ class NeuralStockProphet:
             self.test_data[stock_name] = TimeSeriesDataset(stock_name, self.time_steps, self.scaler, self.test_start_date, self.test_end_date)
         self.n_features = self.train_data[self.stock_names[0]].n_features
     
-    def forecast(self, save_fig=False):
+    def forecast(self, verbose=False):
         self.load_data()
         
         forecasts = {}
+        real_vals = {}
         
         for stock_name in self.stock_names:
+            if verbose:
+                print(f"====================Forecasting for {stock_name}====================")
+
             train_data = self.train_data[stock_name]
             test_data = self.test_data[stock_name]
             
@@ -51,7 +56,7 @@ class NeuralStockProphet:
             self.model.fit(train_data.X, train_data.y.ravel(), epochs=self.epochs, batch_size=self.batch_size)
             
             # visualize the prediction
-            if save_fig:
+            if verbose:
                 visualize_prediction(self.model, test_data, f"{stock_name}_lstm")
             
             # perform multiplicative decomposition
@@ -64,7 +69,7 @@ class NeuralStockProphet:
             
             y_true = test_data.scaler.inverse_transform(test_data.y.reshape(-1, 1))
             
-            if save_fig:
+            if verbose:
                 visualize_results(test_data.df.index[test_data.time_steps:], y_true, lstm_signal, "Adding Seasonal Component", f"{stock_name}_lstm_seasonal")
             
             # ARIMA model
@@ -73,10 +78,14 @@ class NeuralStockProphet:
             
             weighted_signal = self.factor * lstm_signal + (1 - self.factor) * arima_singal
             
-            if save_fig:
+            if verbose:
                 visualize_results(test_data.df.index[test_data.time_steps:], y_true, weighted_signal, "Combine Model", f"{stock_name}_combine")
                 
             forecasts[stock_name] = weighted_signal
+            real_vals[stock_name] = y_true.reshape(-1)
+            
+            if verbose:
+                print("="*80)
         
-        return forecasts
+        return forecasts, real_vals
     
