@@ -3,12 +3,13 @@ import numpy as np
 import pandas as pd
 import empyrical as emp
 
-class Portfolio:
+class RiskParityPortfolio(rpp.RiskParityPortfolio):
     def __init__(self, prices, risk_distribution="eq", constraints=(None, None, None, None), seed=42):
         self.prices = prices
-        self.construct_portfolio(prices, risk_distribution, constraints, seed)
+        
+        self.construct(prices, risk_distribution, constraints, seed)
 
-    def construct_portfolio(self, risk_distribution="eq", constraints=(None, None, None, None), seed=42):
+    def construct(self, risk_distribution="eq", constraints=(None, None, None, None), seed=42):
         """
         minimize R(w) - alpha * mu.T * w + lambda * w.T Sigma w
         subject to Cw = c, Dw <= d
@@ -22,13 +23,7 @@ class Portfolio:
         if seed:
             np.random.seed(seed)
         
-        # Calculate the returns based on the predicted and true prices
-        prices_df = pd.DataFrame(self.prices)
-        
-        # log returns for covariance matrix calculation
-        log_returns = np.diff(np.log(prices_df), axis=0)
-        
-        Sigma = np.cov(log_returns.T)
+        Sigma = np.cov(self.log_returns.T)
         
         b = None
         if risk_distribution == "eq":
@@ -41,22 +36,24 @@ class Portfolio:
         # Construct a risk parity portfolio
         self.portfolio = rpp.RiskParityPortfolio(covariance=Sigma, budget=b)
         self.portfolio.design(Cmat=Cmat, cvec=cvec, Dmat=Dmat, dvec=dvec)
-    
-    def change_prices(self, prices):
-        self.prices = prices
-        self.construct_portfolio(prices)
+        
+    def evaluate(self, prices):
+        lin_returns = np.diff(prices, axis=0) / prices[:-1]
+        ret = lin_returns @ self.weights
+        
+        ret_df = pd.DataFrame({"Portfolio": ret})
+        
+        analyze_result_df = pd.DataFrame({"Sharpe ratio": ret_df.apply(emp.sharpe_ratio), "Max Drawdown": ret_df.apply(emp.max_drawdown).apply(lambda x: f"{x:.2%}"), "Annual return": ret_df.apply(emp.annual_return).apply(lambda x: f"{x:.2%}"), "Annual volatility": ret_df.apply(emp.annual_volatility).apply(lambda x: f"{x:.2%}")})
+        
+        return analyze_result_df
+        
+    @property
+    def weights(self):
+        return self.portfolio.weights
     
     @property
     def risk(self):
         return self.portfolio.risk()
-
-    def get_portfolio_pnl(portfolio, prices):
-        prices_df = pd.DataFrame(prices)
-        prices_mat = np.asarray(prices_df)
-        lin_prices = np.diff(prices_mat, axis=0) / prices_mat[:-1]
-        
-        return emp.cum_returns(lin_prices @ portfolio.weights)
-
 
     @property
     def log_returns(self):
@@ -66,11 +63,25 @@ class Portfolio:
 
     @property
     def lin_returns(self):
-        prices_df = pd.DataFrame(self.prices)
-        prices_mat = np.asarray(prices_df)
-        lin_returns = np.diff(prices_mat, axis=0) / prices_mat[:-1]
+        lin_returns = np.diff(self.prices, axis=0) / self.prices[:-1]
         return lin_returns
-
+    
     @property
-    def weights(self):
-        return self.portfolio.weights
+    def risk(self):
+        return self.portfolio.risk_contributions
+    
+    @property
+    def volatility(self):
+        return self.portfolio.volatility
+    
+    @property
+    def number_of_assests(self):
+        return self.portfolio.number_of_assets
+    
+    @property
+    def budget(self):
+        return self.portfolio.budget
+    
+    @property
+    def Sigma(self):
+        return self.portfolio.covariance
