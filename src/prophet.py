@@ -5,7 +5,7 @@ from src.arima import arima_forecast
 from src.dataset import TimeSeriesDataset
 from src.decompose import multiplicative_decompose
 from src.model import AttentionLSTM
-from src.utils import get_prediction_trend, visualize_prediction, visualize_results
+from src.utils import get_prediction_trend, visualize_results
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -79,7 +79,6 @@ class NeuralStockProphet:
         real_vals = {}
         self.load_data()
         self.model = AttentionLSTM(self.time_steps, self.n_features, self.lr)
-        
 
         for stock_name in self.stock_names:
             if verbose:
@@ -95,13 +94,21 @@ class NeuralStockProphet:
                 train_data.X,
                 train_data.y.ravel(),
                 epochs=self.epochs,
-                batch_size=self.batch_size,
-                verbose=verbose
+                verbose=2 if verbose else 0,
             )
+
+            lstm_trend = get_prediction_trend(self.model, test_data)
+            y_true = test_data.scaler.inverse_transform(test_data.y.reshape(-1, 1))
 
             # visualize the prediction
             if verbose:
-                visualize_prediction(self.model, test_data, f"{stock_name}_lstm")
+                visualize_results(
+                    test_data.df.index[test_data.time_steps :],
+                    y_true,
+                    lstm_trend,
+                    "LSTM Stock Price Prediction",
+                    f"{stock_name}_lstm",
+                )
 
             # perform multiplicative decomposition
             data = train_data.labels
@@ -110,10 +117,7 @@ class NeuralStockProphet:
             )
 
             # get the complete LSTM prediction
-            lstm_trend = get_prediction_trend(self.model, test_data)
             lstm_signal = lstm_trend.reshape(-1) * seasonal[-len(lstm_trend) :] * 1
-
-            y_true = test_data.scaler.inverse_transform(test_data.y.reshape(-1, 1))
 
             if verbose:
                 visualize_results(
