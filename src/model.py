@@ -1,7 +1,12 @@
 import keras
 import tensorflow as tf
-from keras.layers import LSTM, Dense, Dropout, Input, Layer
-from keras.metrics import RootMeanSquaredError, MeanAbsolutePercentageError
+
+tf.get_logger().setLevel("INFO")
+from keras.layers import LSTM, Dense, Dropout, Input, Layer  # type: ignore
+from keras.metrics import (
+    MeanAbsolutePercentageError,  # type: ignore
+    RootMeanSquaredError,
+)
 
 
 @keras.saving.register_keras_serializable()
@@ -11,10 +16,18 @@ class Attention(Layer):
         super(Attention, self).__init__(**kwargs)
 
     def build(self, input_shape):
-        self.W = self.add_weight(name='attention_weight', shape=(input_shape[-1], 1),
-                                initializer='random_normal', trainable=True)
-        self.b = self.add_weight(name='attention_bias', shape=(input_shape[1], 1),
-                                initializer='zeros', trainable=True)
+        self.W = self.add_weight(
+            name="attention_weight",
+            shape=(input_shape[-1], 1),
+            initializer="random_normal",
+            trainable=True,
+        )
+        self.b = self.add_weight(
+            name="attention_bias",
+            shape=(input_shape[1], 1),
+            initializer="zeros",
+            trainable=True,
+        )
         super(Attention, self).build(input_shape)
 
     def call(self, x):
@@ -32,7 +45,7 @@ class Attention(Layer):
 class AttentionLSTM(keras.Model):
     def __init__(self, time_steps, n_features, lr, **kwargs):
         super(AttentionLSTM, self).__init__(**kwargs)
-        
+
         self.time_steps = time_steps
         self.n_features = n_features
         self.inputs = Input(shape=(self.time_steps, self.n_features))
@@ -44,12 +57,16 @@ class AttentionLSTM(keras.Model):
         self.dropout3 = Dropout(0.2)
         self.attention = Attention(return_attention=True)
         self.outputs = Dense(units=1)
-        
+
         self.compile(lr)
 
     def compile(self, lr=1e-3):
-        super(AttentionLSTM, self).compile(optimizer=keras.optimizers.Adam(learning_rate=lr), loss='mean_absolute_error', metrics=[RootMeanSquaredError(), MeanAbsolutePercentageError()])
-    
+        super(AttentionLSTM, self).compile(
+            optimizer=keras.optimizers.Adam(learning_rate=lr),
+            loss="mean_absolute_error",
+            metrics=[RootMeanSquaredError(), MeanAbsolutePercentageError()],
+        )
+
     def call(self, inputs):
         x = self.lstm1(inputs)
         x = self.dropout1(x)
@@ -59,5 +76,5 @@ class AttentionLSTM(keras.Model):
         x = self.dropout3(x)
         context, attention_weights = self.attention(x)
         outputs = self.outputs(context)
-        
+
         return outputs

@@ -1,44 +1,58 @@
-from src.dataset import TimeSeriesDataset
-import matplotlib.pyplot as plt
 import os
-from sklearn.metrics import mean_absolute_error
+
+import matplotlib.pyplot as plt
+import tensorflow as tf
+
+from src.dataset import TimeSeriesDataset
+
+tf.get_logger().setLevel("INFO")
+import keras
 import numpy as np
 import seaborn as sns
-from keras.layers import LSTM, Dropout, Input
-import keras
+from keras.layers import LSTM, Dropout, Input  # type: ignore
+from sklearn.metrics import mean_absolute_error
+
 from src.model import Attention
+
 
 def get_prediction_trend(model, dataset: TimeSeriesDataset):
     predictions = model.predict(dataset.X)
     predictions = dataset.scaler.inverse_transform(predictions.reshape(-1, 1))
-    
+
     return predictions
 
 
 def visualize_results(index, y_true, y_pred, title, file_name):
     plt.figure(figsize=(12, 6))
-    plt.plot(index, y_true, color = 'red', label = 'Real Stock Price')
-    plt.plot(index, y_pred, color = 'blue', label = 'Predicted Stock Price')
+    plt.plot(index, y_true, color="red", label="Real Stock Price")
+    plt.plot(index, y_pred, color="blue", label="Predicted Stock Price")
     plt.title(title)
-    plt.xlabel('Time')
-    plt.ylabel('Stock Price')
+    plt.xlabel("Time")
+    plt.ylabel("Stock Price")
     plt.legend()
-    
+
     file_path = f"Result/{file_name}.png"
     if os.path.exists(file_path):
         os.remove(file_path)
     plt.savefig(file_path)
-    
-    print(f"The mean absolute error is {round(mean_absolute_error(y_true, y_pred), 3)}USD")
+
+    print(
+        f"The mean absolute error is {round(mean_absolute_error(y_true, y_pred), 3)}USD"
+    )
 
 
 def visualize_prediction(model, dataset: TimeSeriesDataset, file_name):
     predictions = get_prediction_trend(model, dataset)
     y_test = dataset.scaler.inverse_transform(dataset.y.reshape(-1, 1))
-    
-    # Visualising the results
-    visualize_results(dataset.time_index[dataset.time_steps:], y_test, predictions, 'LSTM Stock Price Prediction', file_name)
 
+    # Visualising the results
+    visualize_results(
+        dataset.time_index[dataset.time_steps :],
+        y_test,
+        predictions,
+        "LSTM Stock Price Prediction",
+        file_name,
+    )
 
 
 def visualize_timestep_importance(model, dataset: TimeSeriesDataset):
@@ -73,11 +87,14 @@ def visualize_timestep_importance(model, dataset: TimeSeriesDataset):
 
     # Visualize the importance of time steps
     plt.figure(figsize=(15, 6))
-    sns.barplot(x=np.arange(1, attention_weights_mean.shape[0] + 1), y=attention_weights_mean[:, 0])
-    plt.title('Importance of Time Steps')
-    plt.xlabel('Time Step')
-    plt.ylabel('Attention Weight')
-    
+    sns.barplot(
+        x=np.arange(1, attention_weights_mean.shape[0] + 1),
+        y=attention_weights_mean[:, 0],
+    )
+    plt.title("Importance of Time Steps")
+    plt.xlabel("Time Step")
+    plt.ylabel("Attention Weight")
+
     file_path = "Result/attention_weights.png"
     if os.path.exists(file_path):
         os.remove(file_path)
