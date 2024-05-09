@@ -31,7 +31,7 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio):
             risk_concentration=risk_concentration,
         )
 
-        self.construct(prices, risk_distribution, constraints, seed)
+        self.construct(constraints, seed)
 
     def construct(self, constraints=(None, None, None, None), seed=42):
         """
