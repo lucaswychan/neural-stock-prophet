@@ -3,10 +3,8 @@ import tensorflow as tf
 
 tf.get_logger().setLevel("INFO")
 from keras.layers import LSTM, Dense, Dropout, Input, Layer  # type: ignore
-from keras.metrics import (
-    MeanAbsolutePercentageError,  # type: ignore
-    RootMeanSquaredError,
-)
+from keras.metrics import MeanAbsolutePercentageError  # type: ignore
+from keras.metrics import RootMeanSquaredError
 
 
 @keras.saving.register_keras_serializable()
