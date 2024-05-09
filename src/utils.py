@@ -14,6 +14,8 @@ from sklearn.metrics import mean_absolute_error
 
 from src.model import Attention
 
+sns.set(style="darkgrid", font_scale=1.2)
+
 
 def get_prediction_trend(model, dataset: TimeSeriesDataset):
     predictions = model.predict(dataset.X)
@@ -30,29 +32,12 @@ def visualize_results(index, y_true, y_pred, title, file_name):
     plt.xlabel("Time")
     plt.ylabel("Stock Price")
     plt.legend()
+    plt.text(0.5, -0.1, f"The mean absolute error is {round(mean_absolute_error(y_true, y_pred), 3)}USD", ha='center', va='center', transform=plt.gca().transAxes)
 
     file_path = f"Result/{file_name}.png"
     if os.path.exists(file_path):
         os.remove(file_path)
     plt.savefig(file_path)
-
-    print(
-        f"The mean absolute error is {round(mean_absolute_error(y_true, y_pred), 3)}USD"
-    )
-
-
-def visualize_prediction(model, dataset: TimeSeriesDataset, file_name):
-    predictions = get_prediction_trend(model, dataset)
-    y_test = dataset.scaler.inverse_transform(dataset.y.reshape(-1, 1))
-
-    # Visualising the results
-    visualize_results(
-        dataset.time_index[dataset.time_steps :],
-        y_test,
-        predictions,
-        "LSTM Stock Price Prediction",
-        file_name,
-    )
 
 
 def visualize_timestep_importance(model, dataset: TimeSeriesDataset):
