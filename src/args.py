@@ -15,19 +15,19 @@ def args_parser():
         "--train_date",
         nargs=2,
         type=str,
-        help="Start and end date for training data (in the form of YYYY-MM-DD)",
+        help="Start and end date for training data (in the format of YYYY-MM-DD)",
         default=["2016-01-01", "2022-12-31"],
     )
     parser.add_argument(
         "--test_date",
         nargs=2,
         type=str,
-        help="Start and end date for testing data (in the form of YYYY-MM-DD)",
+        help="Start and end date for testing data (in the format of YYYY-MM-DD)",
         default=["2023-01-01", "2023-12-31"],
     )
     parser.add_argument(
         "--keep_ratio",
-        type=int,
+        type=float,
         help="Ratio of the number of features to keep during feature selection",
         default=0.8,
     )
@@ -38,9 +38,9 @@ def args_parser():
         default=60,
     )
     parser.add_argument(
-        "--window_length",
+        "--window_lengths",
         type=int,
-        help="Length of the window for multiplicative decomposition",
+        help="Length of the window for the seasonal component in multiplicative decomposition",
         default=48,
     )
     parser.add_argument(
@@ -71,23 +71,23 @@ def args_parser():
         "--arima_order",
         nargs=3,
         type=int,
-        help="Order of the ARIMA model (enter 3 integers)",
+        help="Order of the ARIMA model (requires 3 integers)",
         default=[1, 0, 6],
     )
     parser.add_argument(
-        "--arima_trend", type=str, help="Trend for the ARIMA model", default="ct"
-    )
-    parser.add_argument(
-        "--verbose",
-        type=bool,
-        help="Determine if saving and printing the result",
-        default=False,
+        "--arima_trend", type=str, help="The deterministic trend in the ARIMA model", default="ct"
     )
     parser.add_argument(
         "--risk_distribution",
         type=str,
         help="Determine the budget allocation of the portfolio",
         default="eq",
+    )
+    parser.add_argument(
+        "--verbose",
+        type=bool,
+        help="Determine if saving and printing the result",
+        default=True,
     )
 
     args = parser.parse_args()
