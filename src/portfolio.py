@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import riskparityportfolio as rpp  # requires manually install jax, jaxlib, tqdm, quadprog
 
+from src.risk_distribution import RiskDistribution
+
 
 class RiskParityPortfolio(rpp.RiskParityPortfolio):
     def __init__(
@@ -16,13 +18,9 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio):
     ):
         self.prices = prices
         Sigma = np.cov(self.log_returns.T)
-        b = None
-        if risk_distribution == "eq":
-            b = np.ones(len(Sigma)) / len(Sigma)
-        elif risk_distribution == "mv":
-            b = np.linalg.inv(Sigma).dot(np.ones(len(Sigma)))
-        else:
-            raise ValueError("Invalid risk distribution : {}".format(risk_distribution))
+        
+        risk_cal = RiskDistribution(Sigma)
+        b = risk_cal.calculate_budgets(risk_distribution=risk_distribution)
 
         super().__init__(
             covariance=Sigma,
