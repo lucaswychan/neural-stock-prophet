@@ -11,17 +11,17 @@ def main():
     args = args_parser()
 
     # Initialize the NeuralStockProphet model
-    scaler = MinMaxScaler(feature_range=(0, 1))
+    scaler_func = lambda: MinMaxScaler(feature_range=(0, 1))
     prophet = NeuralStockProphet(
         args.stock_names,
-        scaler,
+        scaler_func,
         args.train_date[0],
         args.train_date[1],
         args.test_date[0],
         args.test_date[1],
         args.keep_ratio,
         args.time_steps,
-        args.window_length,
+        args.window_lengths,
         args.factor,
         args.epochs,
         args.batch_size,

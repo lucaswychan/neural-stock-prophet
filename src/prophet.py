@@ -14,7 +14,7 @@ class NeuralStockProphet:
     def __init__(
         self,
         stock_names,
-        scaler,
+        scaler_func,
         train_start_date,
         train_end_date,
         test_start_date,
@@ -31,7 +31,7 @@ class NeuralStockProphet:
     ):
         # dataset parameters
         self.stock_names = stock_names
-        self.scaler = scaler
+        self.scaler_func = scaler_func
         self.train_start_date = train_start_date
         self.train_end_date = train_end_date
         self.test_start_date = test_start_date
@@ -63,7 +63,7 @@ class NeuralStockProphet:
             self.train_data[stock_name] = TimeSeriesDataset(
                 stock_name,
                 self.time_steps,
-                self.scaler,
+                self.scaler_func(),
                 self.train_start_date,
                 self.train_end_date,
                 self.keep_ratio
@@ -71,7 +71,7 @@ class NeuralStockProphet:
             self.test_data[stock_name] = TimeSeriesDataset(
                 stock_name,
                 self.time_steps,
-                self.scaler,
+                self.scaler_func(),
                 self.test_start_date,
                 self.test_end_date,
                 self.keep_ratio
