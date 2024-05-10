@@ -19,6 +19,7 @@ class NeuralStockProphet:
         train_end_date,
         test_start_date,
         test_end_date,
+        keep_ratio=0.8,
         time_steps=60,
         window_length=48,
         factor=0.9,
@@ -36,6 +37,7 @@ class NeuralStockProphet:
         self.test_start_date = test_start_date
         self.test_end_date = test_end_date
         self.time_steps = time_steps
+        self.keep_ratio = keep_ratio
 
         # multiplicative decomposition parameter
         self.window_length = window_length
@@ -64,6 +66,7 @@ class NeuralStockProphet:
                 self.scaler,
                 self.train_start_date,
                 self.train_end_date,
+                self.keep_ratio
             )
             self.test_data[stock_name] = TimeSeriesDataset(
                 stock_name,
@@ -71,6 +74,7 @@ class NeuralStockProphet:
                 self.scaler,
                 self.test_start_date,
                 self.test_end_date,
+                self.keep_ratio
             )
         self.n_features = self.train_data[self.stock_names[0]].n_features
 
@@ -131,7 +135,7 @@ class NeuralStockProphet:
             # ARIMA model
             arima_trend = arima_forecast(
                 train_data.labels.values,
-                len(test_data.y),
+                len(y_true),
                 config=(self.arima_order, self.arima_trend),
             )
             arima_singal = arima_trend * seasonal[-len(lstm_trend) :] * 1
@@ -156,48 +160,3 @@ class NeuralStockProphet:
                 print("=" * 80)
 
         return forecasts, real_vals
-
-    # @property
-    # def stock_names(self):
-    #     return self.stock_names
-
-    # @property
-    # def train_start_date(self):
-    #     return self.train_start_date
-
-    # @property
-    # def train_end_date(self):
-    #     return self.train_end_date
-
-    # @property
-    # def test_start_date(self):
-    #     return self.test_start_date
-
-    # @property
-    # def test_end_date(self):
-    #     return self.test_end_date
-
-    # @stock_names.setter
-    # def stock_names(self, stock_names):
-    #     self.stock_names = stock_names
-    #     self.load_data()
-
-    # @train_start_date.setter
-    # def train_date(self, train_start_date):
-    #     self.train_start_date = train_start_date
-    #     self.load_data()
-
-    # @train_end_date.setter
-    # def train_date(self, train_end_date):
-    #     self.train_end_date = train_end_date
-    #     self.load_data()
-
-    # @test_start_date.setter
-    # def train_date(self, test_start_date):
-    #     self.test_start_date = test_start_date
-    #     self.load_data()
-
-    # @test_end_date.setter
-    # def train_date(self, test_end_date):
-    #     self.test_end_date = test_end_date
-    #     self.load_data()

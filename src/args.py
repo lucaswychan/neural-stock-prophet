@@ -26,6 +26,12 @@ def args_parser():
         default=["2023-01-01", "2023-12-31"],
     )
     parser.add_argument(
+        "--keep_ratio",
+        type=int,
+        help="Ratio of the number of features to keep during feature selection",
+        default=0.8,
+    )
+    parser.add_argument(
         "--time_steps",
         type=int,
         help="Number of time steps to consider for forecasting",

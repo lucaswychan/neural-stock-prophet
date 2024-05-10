@@ -19,13 +19,14 @@ def main():
         args.train_date[1],
         args.test_date[0],
         args.test_date[1],
+        args.keep_ratio,
         args.time_steps,
         args.window_length,
         args.factor,
         args.epochs,
         args.batch_size,
         args.lr,
-        args.arima_order,
+        tuple(args.arima_order),
         args.arima_trend,
     )
 
