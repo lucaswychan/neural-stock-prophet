@@ -3,7 +3,7 @@ import numpy as np
 
 def multiplicative_decompose(data, window_length):
     # trend (perform exponential moving average)
-    trend = data.rolling(window_length).mean()
+    trend = data.ewm(window_length).mean()
 
     # sesonal component
     data_detrended = data / trend
