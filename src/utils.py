@@ -25,7 +25,7 @@ def get_prediction_trend(model, dataset: TimeSeriesDataset):
 
 
 def visualize_results(index, y_true, y_pred, title, file_name):
-    plt.figure(figsize=(12, 6))
+    plt.figure(figsize=(12, 9))
     plt.plot(index, y_true, color="red", label="Real Stock Price")
     plt.plot(index, y_pred, color="blue", label="Predicted Stock Price")
     plt.title(title)
