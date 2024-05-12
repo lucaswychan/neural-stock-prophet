@@ -76,3 +76,10 @@ The (.) after the argument type indicates the ```nargs=``` value in ```argparse.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+<hr/>
+
+## TODO
+There are further improvements that can be made. Please have a look at the [TODO](TODO). 
+
+<hr/>
