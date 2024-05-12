@@ -134,10 +134,22 @@ class NeuralStockProphet:
 
             # ARIMA model
             arima_trend = arima_forecast(
-                train_data.labels.values,
+                train_data.df["Adj Close"].values,
                 len(y_true),
                 config=(self.arima_order, self.arima_trend),
             )
+            
+            arima_trend = train_data.scaler.inverse_transform(arima_trend.reshape(-1, 1))
+            
+            if verbose:
+                visualize_results(
+                    test_data.df.index[test_data.time_steps :],
+                    y_true,
+                    arima_trend,
+                    "ARIMA Stock Price Prediction",
+                    f"{stock_name}_arima",
+                )
+                
             arima_singal = arima_trend * seasonal[-len(lstm_trend) :] * 1
 
             weighted_signal = (
