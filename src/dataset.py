@@ -16,11 +16,12 @@ class TimeSeriesDataset:
         self.scaler = scaler
         self.labels = self.df["Adj Close"]
         self.time_index = self.df.index
+        self.keep_ratio = keep_ratio
 
-        self._process_df(keep_ratio)
+        self._process_df()
         self._preprocess()
 
-    def _process_df(self, keep_ratio):
+    def _process_df(self):
         self.df = add_all_ta_features(
             self.df,
             close="Adj Close",
@@ -36,7 +37,7 @@ class TimeSeriesDataset:
         self.df = self.df.drop(columns=redundant_columns)
 
         # choose elements based on variance
-        num_columns_to_drop = int(self.df.shape[1] * (1 - keep_ratio))
+        num_columns_to_drop = int(self.df.shape[1] * (1 - self.keep_ratio))
         variances = self.df.var()
         sorted_variances = variances.sort_values()
         columns_to_drop_by_var = sorted_variances[:num_columns_to_drop].index
