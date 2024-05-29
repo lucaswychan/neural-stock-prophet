@@ -150,7 +150,7 @@ class NeuralStockProphet:
                     f"{stock_name}_arima",
                 )
                 
-            arima_singal = arima_trend * seasonal[-len(lstm_trend) :] * 1
+            arima_singal = arima_trend.reshape(-1) * seasonal[-len(lstm_trend) :] * 1
 
             weighted_signal = (
                 self.factor * lstm_signal + (1 - self.factor) * arima_singal
@@ -160,7 +160,7 @@ class NeuralStockProphet:
                 visualize_results(
                     test_data.df.index[test_data.time_steps :],
                     y_true,
-                    weighted_signal,
+                    weighted_signal.reshape((-1, 1)),
                     "Combine Model",
                     f"{stock_name}_combine",
                 )
