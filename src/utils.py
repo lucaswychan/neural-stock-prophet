@@ -71,7 +71,7 @@ def visualize_timestep_importance(model, dataset: TimeSeriesDataset):
     attention_weights_mean = np.mean(attention_weights_test, axis=0)
 
     # Visualize the importance of time steps
-    plt.figure(figsize=(15, 6))
+    plt.figure(figsize=(15, 9))
     sns.barplot(
         x=np.arange(1, attention_weights_mean.shape[0] + 1),
         y=attention_weights_mean[:, 0],
