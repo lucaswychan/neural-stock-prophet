@@ -3,7 +3,7 @@
     <img src="https://img.shields.io/badge/TensorFlow-FF8000?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow">
   </a>
   <a href="https://keras.io/">
-    <img src="https://img.shields.io/badge/Keras-FF0000?style=for-the-badge&logo=keras&logoColor=white" alt"Keras">
+    <img src="https://img.shields.io/badge/Keras-%23D00000.svg?style=for-the-badge&logo=Keras&logoColor=white" alt"Keras">
   </a>
   <a href="https://en.wikipedia.org/wiki/Long_short-term_memory">
     <img src="https://img.shields.io/badge/LSTM-009900?style=for-the-badge" alt"LSTM">
