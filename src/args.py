@@ -16,14 +16,14 @@ def args_parser():
         nargs=2,
         type=str,
         help="Start and end date for training data (in the format of YYYY-MM-DD)",
-        default=["2016-01-01", "2022-12-31"],
+        default=["2016-01-01", "2021-12-31"],
     )
     parser.add_argument(
         "--test_date",
         nargs=2,
         type=str,
         help="Start and end date for testing data (in the format of YYYY-MM-DD)",
-        default=["2023-01-01", "2023-12-31"],
+        default=["2022-01-01", "2022-12-31"],
     )
     parser.add_argument(
         "--keep_ratio",
