@@ -75,7 +75,10 @@ def args_parser():
         default=[1, 0, 6],
     )
     parser.add_argument(
-        "--arima_trend", type=str, help="The deterministic trend in the ARIMA model", default="ct"
+        "--arima_trend",
+        type=str,
+        help="The deterministic trend in the ARIMA model",
+        default="ct",
     )
     parser.add_argument(
         "--risk_distribution",
