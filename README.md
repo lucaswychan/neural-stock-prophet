@@ -51,6 +51,15 @@ python3 main.py --time_steps=30 --window_lengths=252 --arima_order 2 0 2 --train
 
 <hr/>
 
+## Sample Output
+```
+                     Sharpe ratio Max Drawdown Annual return Annual volatility
+Predicted Portfolio      6.376220       -1.87%        53.82%             6.80%
+True Portfolio           2.061231       -8.44%        53.28%            21.89%
+```
+
+<hr/>
+
 ## Parameters
 There are various parameters required by the algorithms. 
 For more details, you can visit src/```args.py```  
