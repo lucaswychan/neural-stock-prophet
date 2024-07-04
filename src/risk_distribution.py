@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class RiskDistribution:
     def __init__(self, Sigma):
         self.Sigma = Sigma

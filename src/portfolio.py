@@ -18,7 +18,7 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio):
     ):
         self.prices = prices
         Sigma = np.cov(self.log_returns.T)
-        
+
         risk_cal = RiskDistribution(Sigma)
         b = risk_cal.calculate_budgets(risk_distribution=risk_distribution)
 

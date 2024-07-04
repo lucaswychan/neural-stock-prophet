@@ -32,7 +32,14 @@ def visualize_results(index, y_true, y_pred, title, file_name):
     plt.xlabel("Time")
     plt.ylabel("Stock Price")
     plt.legend()
-    plt.text(0.5, -0.1, f"The mean absolute error is {round(mean_absolute_error(y_true, y_pred), 3)}USD", ha='center', va='center', transform=plt.gca().transAxes)
+    plt.text(
+        0.5,
+        -0.1,
+        f"The mean absolute error is {round(mean_absolute_error(y_true, y_pred), 3)}USD",
+        ha="center",
+        va="center",
+        transform=plt.gca().transAxes,
+    )
 
     file_path = f"Result/{file_name}.png"
     if os.path.exists(file_path):
