@@ -75,8 +75,7 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio):
     def log_returns(self):
         if self.prices is None:
             raise ValueError("Prices are not set")
-        prices_df = pd.DataFrame(self.prices)
-        log_returns = np.diff(np.log(prices_df), axis=0)
+        log_returns = np.diff(np.log(self.prices), axis=0)
         return log_returns
 
     @property
