@@ -1,19 +1,11 @@
 <div align="center">
-  <a href="https://github.com/tensorflow/tensorflow">
-    <img src="https://img.shields.io/badge/TensorFlow-FF8000?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow">
-  </a>
-  <a href="https://keras.io/">
-    <img src="https://img.shields.io/badge/Keras-%23D00000.svg?style=for-the-badge&logo=Keras&logoColor=white" alt"Keras">
-  </a>
-  <a href="https://en.wikipedia.org/wiki/Long_short-term_memory">
-    <img src="https://img.shields.io/badge/LSTM-009900?style=for-the-badge" alt"LSTM">
-  </a>
-  <a href="https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average">
-    <img src="https://img.shields.io/badge/ARIMA-0080FF?style=for-the-badge" alt"ARIMA">
-  </a>
+
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-FF8000?style=for-the-badge&logo=tensorflow&logoColor=white)](https://github.com/tensorflow/tensorflow)
+[![Keras](https://img.shields.io/badge/Keras-%23D00000.svg?style=for-the-badge&logo=Keras&logoColor=white)](https://keras.io/)
+[![LSTM](https://img.shields.io/badge/LSTM-009900?style=for-the-badge)](https://en.wikipedia.org/wiki/Long_short-term_memory)
+[![ARIMA](https://img.shields.io/badge/ARIMA-0080FF?style=for-the-badge)](https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average)
 </div>
 
-<hr/>
 
 # Neural Stock Prophet
 
@@ -24,7 +16,6 @@ Stock Price Prediction using a machine learning algorithm helps discover the fut
 + ARIMA model
 + Risk Parity Portfolio
 
-<hr/>
 
 ## Dependencies
 You can install all the packages via
@@ -32,7 +23,6 @@ You can install all the packages via
 pip install -r requirements.txt
 ```
 
-<hr/>
 
 ## Instructions
 There are lots of parameters required to construct several algorithms. For more details on the parameters, please visit [Parameters](#parameters)
@@ -49,7 +39,6 @@ E.g. Timesteps = 30 for dataset construction, window lengths = 252 for multiplic
 python3 main.py --time_steps=30 --window_lengths=252 --arima_order 2 0 2 --train_date 2012-01-01 2022-12-31 --test_date 2023-01-01 2023-12-31
 ```
 
-<hr/>
 
 ## Sample Output
 ```
@@ -58,7 +47,6 @@ Predicted Portfolio      6.376220       -1.87%        53.82%             6.80%
 True Portfolio           2.061231       -8.44%        53.28%            21.89%
 ```
 
-<hr/>
 
 ## Parameters
 There are various parameters required by the algorithms. 
@@ -81,14 +69,11 @@ The (.) after the argument type indicates the ```nargs=``` value in ```argparse.
 |  verbose  | Determine if saving and printing the result   |True   |bool   | {True, False} | 
 | risk_distribution   | Determine the budget allocation of the portfolio   |eq   |str   | {eq, mv} |
 
-<hr/>
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-<hr/>
 
 ## TODO
 There are further improvements that can be made. Please have a look at the [TODO](TODO.md). 
 
-<hr/>
