@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
-from src.dataset import TimeSeriesDataset
+from prophet.dataset import TimeSeriesDataset
 
 tf.get_logger().setLevel("INFO")
 import keras
@@ -12,7 +12,7 @@ import seaborn as sns
 from keras.layers import LSTM, Dropout, Input  # type: ignore
 from sklearn.metrics import mean_absolute_error
 
-from src.model import Attention
+from prophet.model import Attention
 
 sns.set(style="darkgrid", font_scale=1.2)
 
