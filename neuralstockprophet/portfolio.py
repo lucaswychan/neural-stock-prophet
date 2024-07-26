@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import riskparityportfolio as rpp  # requires manually install jax, jaxlib, tqdm, quadprog
 
-from prophet.risk_distribution import RiskDistribution
+from .risk_distribution import RiskDistribution
 
 
 class RiskParityPortfolio(rpp.RiskParityPortfolio):

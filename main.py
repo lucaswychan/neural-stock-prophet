@@ -3,8 +3,8 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
 from args import args_parser
-from prophet import RiskParityPortfolio
-from prophet import NeuralStockProphet
+from neuralstockprophet import RiskParityPortfolio
+from neuralstockprophet import NeuralStockProphet
 
 
 def main():

@@ -2,11 +2,11 @@ import warnings
 from datetime import datetime
 from typing import Dict
 
-from prophet.arima import arima_forecast
-from prophet.dataset import TimeSeriesDataset
-from prophet.decompose import multiplicative_decompose
-from prophet.model import AttentionLSTM
-from prophet.utils import get_prediction_trend, visualize_results
+from .arima import arima_forecast
+from .dataset import TimeSeriesDataset
+from .decompose import multiplicative_decompose
+from .model import AttentionLSTM
+from .utils import get_prediction_trend, visualize_results
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
