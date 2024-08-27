@@ -1,6 +1,6 @@
 import warnings
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List, Tuple, Union
 
 from .arima import arima_forecast
 from .dataset import TimeSeriesDataset
@@ -14,21 +14,21 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 class NeuralStockProphet:
     def __init__(
         self,
-        stock_names,
-        scaler_func,
-        train_start_date,
-        train_end_date,
-        test_start_date,
-        test_end_date,
-        keep_ratio=0.8,
-        time_steps=60,
-        window_length=48,
-        factor=0.9,
-        epochs=50,
-        batch_size=32,
-        lr=1e-3,
-        arima_order=(1, 0, 6),
-        arima_trend="ct",
+        stock_names: List[str],
+        scaler_func: callable,
+        train_start_date: Union[str, datetime],
+        train_end_date: Union[str, datetime],
+        test_start_date: Union[str, datetime],
+        test_end_date: Union[str, datetime],
+        keep_ratio: float = 0.8,
+        time_steps: int = 60,
+        window_length: int = 48,
+        factor: float = 0.9,
+        epochs: int = 50,
+        batch_size: int = 32,
+        lr: float = 1e-3,
+        arima_order: Tuple[int, int, int] = (1, 0, 6),
+        arima_trend: str = "ct",
     ):
         # dataset parameters
         assert len(stock_names) >= 2, "At least 2 stock names are required"
@@ -68,6 +68,9 @@ class NeuralStockProphet:
         # combine model parameter
         assert 0 <= factor <= 1, "factor should be in [0, 1]"
         self.factor = factor
+
+        self.forecasts = None
+        self.real_vals = None
 
     def load_data(self):
         # print("load data")
@@ -186,5 +189,8 @@ class NeuralStockProphet:
 
             if verbose:
                 print("=" * 80)
+
+        self.forecasts = forecasts
+        self.real_vals = real_vals
 
         return forecasts, real_vals
