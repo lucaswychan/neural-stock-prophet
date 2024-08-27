@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "neuralstockprophet"
-version = "1.0.0"
+version = "0.0.1"
 description = "LSTM-ARIMA with Attention and multiplicative decomposition for sophisticated stock forecasting."
 license = "MIT"
 authors = ["Lucas Chan <chanconan@gmail.com >"]
