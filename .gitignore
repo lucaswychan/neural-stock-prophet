@@ -1,3 +1,5 @@
 /venv
 project_lstm.ipynb
 /src/__pycache__
+/test_package
+/dist
