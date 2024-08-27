@@ -7,11 +7,63 @@ from .dataset import TimeSeriesDataset
 from .decompose import multiplicative_decompose
 from .model import AttentionLSTM
 from .utils import get_prediction_trend, visualize_results
+from neuralstockprophet import NeuralStockProphet
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
 class NeuralStockProphet:
+    """
+    NeuralStockProphet is a class that combines LSTM model with attention mechanisms, ARIMA model, and multiplicative decomposition to forecast stock prices. The class is designed to forecast stock prices for multiple stocks at once.
+    
+    Parameters
+    ----------
+    stock_names : List[str]
+        A list of stock names to forecast
+    scaler_func : callable
+        A function that returns a scaler object to normalize the data
+    train_start_date : Union[str, datetime]
+        The start date of the training data
+    train_end_date : Union[str, datetime]
+        The end date of the training data
+    test_start_date : Union[str, datetime]
+        The start date of the testing data
+    test_end_date : Union[str, datetime]
+        The end date of the testing data
+    keep_ratio : float, optional
+        The ratio of data to keep for training, by default 0.8
+    time_steps : int, optional
+        The number of time steps to consider for each prediction, by default 60
+    window_length : int, optional
+        The window length for multiplicative decomposition, by default 48
+    factor : float, optional
+        The factor to combine the LSTM and ARIMA forecast, by default 0.9
+    epochs : int, optional
+        The number of epochs to train the LSTM model, by default 50
+    batch_size : int, optional
+        The batch size for training the LSTM model, by default 32
+    lr : float, optional
+        The learning rate for training the LSTM model, by default 1e-3
+    arima_order : Tuple[int, int, int], optional
+        The order of the ARIMA model, by default (1, 0, 6)
+    arima_trend : str, optional
+        The trend parameter for the ARIMA model, by default "ct"
+
+    Examples
+    --------
+
+    >>> # Create a new instance of NeuralStockProphet
+    >>> nsp = NeuralStockProphet(
+    ...    stock_names=["AAPL", "GOOGL"],
+    ...    scaler_func=lambda: MinMaxScaler(feature_range=(0, 1)),
+    ...    train_start_date="2010-01-01",
+    ...    train_end_date="2019-12-31",
+    ...    test_start_date="2020-01-01",
+    ...    test_end_date="2020-12-31",
+    ... )
+
+    >>> forecasts, real_vals = nsp.forecast(verbose=True)
+    """
     def __init__(
         self,
         stock_names: List[str],
