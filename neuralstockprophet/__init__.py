@@ -1,6 +1,6 @@
-from .prophet import NeuralStockProphet
-from .portfolio import RiskParityPortfolio
-
 import tensorflow as tf
+
+from .portfolio import BasePortfolio, RiskParityPortfolio
+from .prophet import NeuralStockProphet
 
 tf.get_logger().setLevel("INFO")

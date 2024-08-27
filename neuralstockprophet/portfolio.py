@@ -6,7 +6,18 @@ import riskparityportfolio as rpp  # requires manually install jax, jaxlib, tqdm
 from .risk_distribution import RiskDistribution
 
 
-class RiskParityPortfolio(rpp.RiskParityPortfolio):
+class BasePortfolio:
+    def __init__(self):
+        pass
+
+    def construct(self):
+        raise NotImplementedError
+
+    def evaluate(self):
+        raise NotImplementedError
+
+
+class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
     def __init__(
         self,
         prices,
@@ -22,12 +33,15 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio):
         risk_cal = RiskDistribution(Sigma)
         b = risk_cal.calculate_budgets(risk_distribution=risk_distribution)
 
-        super().__init__(
+        rpp.RiskParityPortfolio.__init__(
+            self,
             covariance=Sigma,
             budget=b,
             weights=weights,
             risk_concentration=risk_concentration,
         )
+
+        BasePortfolio.__init__(self, prices, weights)
 
         self.construct(constraints, seed)
 
