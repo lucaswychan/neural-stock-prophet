@@ -1,14 +1,27 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "neuralstockprophet"
-version = "0.0.1"
-description = "LSTM-ARIMA with Attention and multiplicative decomposition for sophisticated stock forecasting."
-license = "MIT"
-authors = ["Lucas Chan <chanconan@gmail.com >"]
+version = "0.0.2"
+description = "LSTM-ARIMA with attention mechanisms and multiplicative decomposition for sophisticated stock forecasting."
+license = {file = "LICENSE"}
+authors = [
+    {name = "Lucas Chan", email = "chanconan@gmail.com"},
+]
+maintainers = [
+    {name = "Lucas Chan", email = "chanconan@gmail.com"},
+]
+keywords = ["stock", "forecasting", "LSTM", "ARIMA", "attention", "multiplicative decomposition"]
 readme = "README.md"
 classifiers=[
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: MIT License',
+    'Natural Language :: English',
+    'Operating System :: OS Independent',
+    'Topic :: Scientific/Engineering :: Artificial Intelligence',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
@@ -16,35 +29,33 @@ classifiers=[
     'Programming Language :: Python :: 3.12',
     "Programming Language :: Python :: 3 :: Only",
 ]
-packages = [ {include = "neuralstockprophet"} ]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "scipy",
+    "statsmodels",
+    "ta",
+    "tensorflow",
+    "quadprog",
+    "jax",
+    "jaxlib",
+    "tqdm",
+    "riskparityportfolio",
+    "yfinance",
+    "empyrical",
+]
 
+[project.urls]
+Repository = "https://github.com/lucaswychan/neural-stock-prophet"
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.urls]
-Homepage = "https://github.com/lucaswychan/neural-stock-prophet"
-
-[tool.poetry.dependencies]
-python = ">=3.8"
-numpy = "^1.20.1"
-pandas = "^1.2.3"
-scikit-learn = "^0.24.1"
-scipy = "^1.6.1"
-statsmodels = "^0.12.2"
-ta = "^0.11.0"
-tensorflow = "^2.16.1"
-quadprog = "^0.1.12"
-jax = "^0.4.26"
-jaxlib = "^0.4.26"
-tqdm = "^4.66.4"
-riskparityportfolio = "^0.5.1"
-yfinance = "^0.1.63"
-empyrical = "^0.5.5"
-
-[tool.black]
-line-length = 88
-
-[tool.isort]
-profile = "black"
+[project.optional-dependencies]
+tests = [
+    "pytest",
+    "pytest-cov"
+]
+lint = [
+    "black",
+    "flake8"
+]
