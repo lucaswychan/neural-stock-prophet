@@ -7,7 +7,6 @@ from .dataset import TimeSeriesDataset
 from .decompose import multiplicative_decompose
 from .model import AttentionLSTM
 from .utils import get_prediction_trend, visualize_results
-from neuralstockprophet import NeuralStockProphet
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
