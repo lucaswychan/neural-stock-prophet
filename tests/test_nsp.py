@@ -1,6 +1,7 @@
 import unittest
 from neuralstockprophet import NeuralStockProphet
 
+
 class TestNeuralStockProphet(unittest.TestCase):
     def setUp(self):
         self.nsp = NeuralStockProphet()
@@ -23,5 +24,6 @@ class TestNeuralStockProphet(unittest.TestCase):
         self.assertGreaterEqual(evaluation, 0.0)
         self.assertLessEqual(evaluation, 1.0)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

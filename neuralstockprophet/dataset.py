@@ -8,9 +8,7 @@ yf.pdr_override()
 
 
 class TimeSeriesDataset:
-    def __init__(
-        self, stock_name, time_steps, scaler, start_date, end_date, keep_ratio=0.8
-    ):
+    def __init__(self, stock_name, time_steps, scaler, start_date, end_date, keep_ratio=0.8):
         self.time_steps = time_steps
         self.df = pdr.get_data_yahoo([stock_name], start=start_date, end=end_date)
         self.scaler = scaler
@@ -53,10 +51,7 @@ class TimeSeriesDataset:
             self.df[col] = self.scaler.fit_transform(self.df[col].values.reshape(-1, 1))
             # Prepare training set
             scaled_data = self.df[col].values
-            X = [
-                scaled_data[j - self.time_steps : j]
-                for j in range(self.time_steps, len(scaled_data))
-            ]
+            X = [scaled_data[j - self.time_steps : j] for j in range(self.time_steps, len(scaled_data))]
             X = np.reshape(np.array(X), (-1, self.time_steps, 1))
             self.X.append(X)
 
