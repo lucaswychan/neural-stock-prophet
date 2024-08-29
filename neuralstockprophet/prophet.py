@@ -2,6 +2,8 @@ import warnings
 from datetime import datetime
 from typing import Dict, List, Tuple, Union
 
+import numpy as np
+
 from .arima import arima_forecast
 from .dataset import TimeSeriesDataset
 from .decompose import multiplicative_decompose
@@ -150,7 +152,7 @@ class NeuralStockProphet:
             )
         self.n_features = self.train_data[self.stock_names[0]].n_features
 
-    def forecast(self, verbose=False):
+    def forecast(self, verbose=False) -> Dict[str, np.ndarray]:
         forecasts = {}
         real_vals = {}
         self.load_data()
