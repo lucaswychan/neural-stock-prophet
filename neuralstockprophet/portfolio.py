@@ -1,16 +1,17 @@
-from typing import Tuple, Optional
+from abc import ABC, abstractmethod
+from typing import Optional, Tuple
 
 import empyrical as emp
 import numpy as np
 import pandas as pd
 import riskparityportfolio as rpp  # requires manually install jax, jaxlib, tqdm, quadprog
 
-from .risk_distribution import RiskDistribution
+from .risk_strategy import *
 
 __all__ = ["BasePortfolio", "RiskParityPortfolio"]
 
 
-class BasePortfolio:
+class BasePortfolio(ABC):
     """
     BasePortfolio is an abstract class that defines the basic structure of a portfolio
 
@@ -20,32 +21,34 @@ class BasePortfolio:
     def __init__(self):
         pass
 
+    @abstractmethod
     def construct(self, **kwargs):
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def evaluate(self):
-        raise NotImplementedError
+        pass
 
 
 class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
     def __init__(
         self,
         prices,
-        risk_distribution: str = "eq",
+        strategy: RiskDistributionStrategy = EqualBudgetsStrategy(),
         constraints: tuple = (None, None, None, None),
         weights=None,
         risk_concentration=None,
         seed: Optional[int] = 42,
     ):
         self.prices = prices
-        Sigma = np.cov(self.log_returns.T)
+        self.Sigma = np.cov(self.log_returns.T)
+        print(self.Sigma)
 
-        risk_cal = RiskDistribution(Sigma)
-        b = risk_cal.calculate_budgets(risk_distribution=risk_distribution)
+        b = strategy.calculate(self.Sigma)
 
         rpp.RiskParityPortfolio.__init__(
             self,
-            covariance=Sigma,
+            covariance=self.Sigma,
             budget=b,
             weights=weights,
             risk_concentration=risk_concentration,
