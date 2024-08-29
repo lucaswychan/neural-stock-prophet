@@ -1,3 +1,5 @@
+from typing import Tuple, Optional
+
 import empyrical as emp
 import numpy as np
 import pandas as pd
@@ -5,12 +7,20 @@ import riskparityportfolio as rpp  # requires manually install jax, jaxlib, tqdm
 
 from .risk_distribution import RiskDistribution
 
+__all__ = ["BasePortfolio", "RiskParityPortfolio"]
+
 
 class BasePortfolio:
+    """
+    BasePortfolio is an abstract class that defines the basic structure of a portfolio
+
+    Override the `construct` and `evaluate` methods to implement a custom portfolio
+    """
+
     def __init__(self):
         pass
 
-    def construct(self):
+    def construct(self, **kwargs):
         raise NotImplementedError
 
     def evaluate(self):
@@ -21,11 +31,11 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
     def __init__(
         self,
         prices,
-        risk_distribution="eq",
-        constraints=(None, None, None, None),
+        risk_distribution: str = "eq",
+        constraints: tuple = (None, None, None, None),
         weights=None,
         risk_concentration=None,
-        seed=42,
+        seed: Optional[int] = 42,
     ):
         self.prices = prices
         Sigma = np.cov(self.log_returns.T)
@@ -43,26 +53,41 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
 
         BasePortfolio.__init__(self, prices, weights)
 
-        self.construct(constraints, seed)
+        self.seed = seed
 
-    def construct(self, constraints=(None, None, None, None), seed=42):
+        self.construct(constraints=constraints)
+
+    def construct(self, **kwargs) -> None:
         """
         minimize R(w) - alpha * mu.T * w + lambda * w.T Sigma w
         subject to Cw = c, Dw <= d
 
         please visit https://github.com/convexfi/riskparity.py for more portfolio construction information
         """
-        Cmat, cvec, Dmat, dvec = constraints
+        Cmat, cvec, Dmat, dvec = kwargs.get("constraints", (None, None, None, None))
         if (Cmat is None) != (cvec is None) or (Dmat is None) != (dvec is None):
             raise ValueError("Invalid constraints")
 
-        if seed:
-            np.random.seed(seed)
+        if self.seed:
+            np.random.seed(self.seed)
 
         # Construct a risk parity portfolio
-        self.design(Cmat=Cmat, cvec=cvec, Dmat=Dmat, dvec=dvec)
+        self.design(**kwargs)
 
-    def evaluate(self, prices):
+    def evaluate(self, prices) -> pd.DataFrame:
+        """
+        Evaluate the portfolio performance with the true stock prices
+
+        Parameters
+        ----------
+        prices : np.ndarray
+            The true stock prices
+
+        Returns
+        -------
+        analyze_result_df : pd.DataFrame
+            The performance metrics of the portfolio
+        """
         lin_returns = np.diff(prices, axis=0) / prices[:-1]
         ret = lin_returns @ self.weights
 
@@ -71,15 +96,9 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
         analyze_result_df = pd.DataFrame(
             {
                 "Sharpe ratio": ret_df.apply(emp.sharpe_ratio),
-                "Max Drawdown": ret_df.apply(emp.max_drawdown).apply(
-                    lambda x: f"{x:.2%}"
-                ),
-                "Annual return": ret_df.apply(emp.annual_return).apply(
-                    lambda x: f"{x:.2%}"
-                ),
-                "Annual volatility": ret_df.apply(emp.annual_volatility).apply(
-                    lambda x: f"{x:.2%}"
-                ),
+                "Max Drawdown": ret_df.apply(emp.max_drawdown).apply(lambda x: f"{x:.2%}"),
+                "Annual return": ret_df.apply(emp.annual_return).apply(lambda x: f"{x:.2%}"),
+                "Annual volatility": ret_df.apply(emp.annual_volatility).apply(lambda x: f"{x:.2%}"),
             }
         )
 

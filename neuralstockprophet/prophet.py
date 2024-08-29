@@ -10,15 +10,17 @@ from .utils import get_prediction_trend, visualize_results
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
+__all__ = ["NeuralStockProphet"]
+
 
 class NeuralStockProphet:
     """
     NeuralStockProphet is a class that combines LSTM model with attention mechanisms, ARIMA model, and multiplicative decomposition to forecast stock prices. The class is designed to forecast stock prices for multiple stocks at once.
-    
+
     Parameters
     ----------
     stock_names : List[str]
-        A list of stock names to forecast
+        A list of stock names to forecast (must have at least 2 stocks)
     scaler_func : callable
         A function that returns a scaler object to normalize the data
     train_start_date : Union[str, datetime]
@@ -63,6 +65,7 @@ class NeuralStockProphet:
 
     >>> forecasts, real_vals = nsp.forecast(verbose=True)
     """
+
     def __init__(
         self,
         stock_names: List[str],
@@ -155,9 +158,7 @@ class NeuralStockProphet:
 
         for stock_name in self.stock_names:
             if verbose:
-                print(
-                    f"====================Forecasting for {stock_name}===================="
-                )
+                print(f"====================Forecasting for {stock_name}====================")
 
             train_data = self.train_data[stock_name]
             test_data = self.test_data[stock_name]
@@ -185,9 +186,7 @@ class NeuralStockProphet:
 
             # perform multiplicative decomposition
             data = train_data.labels
-            trend, seasonal, residual = multiplicative_decompose(
-                data, self.window_length
-            )
+            trend, seasonal, residual = multiplicative_decompose(data, self.window_length)
 
             # get the complete LSTM prediction
             lstm_signal = lstm_trend.reshape(-1) * seasonal[-len(lstm_trend) :] * 1
@@ -222,9 +221,7 @@ class NeuralStockProphet:
             arima_singal = arima_trend.reshape(-1) * seasonal[-len(lstm_trend) :] * 1
 
             # combine the LSTM and ARIMA forecast
-            weighted_signal = (
-                self.factor * lstm_signal + (1 - self.factor) * arima_singal
-            )
+            weighted_signal = self.factor * lstm_signal + (1 - self.factor) * arima_singal
 
             if verbose:
                 visualize_results(
