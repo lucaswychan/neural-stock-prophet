@@ -38,6 +38,7 @@ dependencies = [
     "statsmodels",
     "ta",
     "tensorflow",
+    "tensorflow-metal",
     "quadprog",
     "jax",
     "jaxlib",
