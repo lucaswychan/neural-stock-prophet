@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/neuralstockprophet?label=pypi%20package&color)](https://pypi.org/project/neuralstockprophet/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/neuralstockprophet?color)](https://pypistats.org/packages/neuralstockprophet)
-[![GitHub license badge](https://img.shields.io/github/license/lucaswychan/neural-stock-prophet?color=blue)](http://www.apache.org/licenses/LICENSE-2.0)
+[![GitHub license badge](https://img.shields.io/github/license/lucaswychan/neural-stock-prophet?color=blue)](https://opensource.org/licenses/MIT)
 
 **neuralstockprophet** integrates a variety of advanced techniques and algorithms to enhance the robustness, stability, and interoperability of stock price prediction methodologies. By leveraging machine learning, this package aims to accurately forecast the future values of company stocks and other financial assets traded on exchanges. Unlike existing approaches that predominantly focus on model configuration and tuning—often neglecting the inherent variability within the data—NeuralStockProphet addresses these challenges. Furthermore, it effectively mitigates issues related to overfitting and performance constraints that are commonly encountered in machine learning models.
 
@@ -23,9 +23,9 @@ pip install neuralstockprophet
 ## Getting Started
 
 ```python
-from neuralstockprophet import NeuralStockProphet
+import neuralstockprophet as nsp
 
-nsp = NeuralStockProphet(
+prophet = nsp.NeuralStockProphet(
         stock_names=["AAPL", "GOOGL"],
         scaler_func=lambda: MinMaxScaler(feature_range=(0, 1)),
         train_start_date="2010-01-01",
@@ -34,7 +34,7 @@ nsp = NeuralStockProphet(
         test_end_date="2020-12-31",
     )
 
-forecasts, real_vals = nsp.forecast()
+forecasts, real_vals = prophet.forecast()
 ```
 
 Get the historical data simply by inputting the stock codes.
