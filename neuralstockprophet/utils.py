@@ -1,17 +1,14 @@
 import os
 
-import matplotlib.pyplot as plt
-import tensorflow as tf
-
-from .dataset import TimeSeriesDataset
-
-tf.get_logger().setLevel("INFO")
 import keras
+import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+import tensorflow as tf
 from keras.layers import LSTM, Dropout, Input  # type: ignore
 from sklearn.metrics import mean_absolute_error
 
+from .dataset import TimeSeriesDataset
 from .model import Attention
 
 sns.set(style="darkgrid", font_scale=1.2)
@@ -41,7 +38,10 @@ def visualize_results(index, y_true, y_pred, title, file_name):
         transform=plt.gca().transAxes,
     )
 
-    file_path = f"Result/{file_name}.png"
+    if not os.path.exists("results"):
+        os.makedirs("results")
+
+    file_path = f"results/{file_name}.png"
     if os.path.exists(file_path):
         os.remove(file_path)
     plt.savefig(file_path)

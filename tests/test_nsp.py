@@ -1,4 +1,5 @@
 import unittest
+
 from neuralstockprophet import NeuralStockProphet
 
 
