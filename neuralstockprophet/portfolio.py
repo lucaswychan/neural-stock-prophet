@@ -18,9 +18,6 @@ class BasePortfolio(ABC):
     Override the `construct` and `evaluate` methods to implement a custom portfolio
     """
 
-    def __init__(self):
-        pass
-
     @abstractmethod
     def construct(self, **kwargs):
         pass
@@ -33,41 +30,39 @@ class BasePortfolio(ABC):
 class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
     def __init__(
         self,
-        prices,
+        prices: np.ndarray,
         strategy: RiskDistributionStrategy = EqualBudgetsStrategy(),
         constraints: tuple = (None, None, None, None),
         weights=None,
         risk_concentration=None,
-        seed: Optional[int] = 42,
+        seed: Optional[int] = 1016,
     ):
-        self.prices = prices
         self.Sigma = np.cov(self.log_returns.T)
-        print(self.Sigma)
 
-        b = strategy.calculate(self.Sigma)
+        budget = strategy.calculate(self.Sigma)
 
         rpp.RiskParityPortfolio.__init__(
             self,
             covariance=self.Sigma,
-            budget=b,
+            budget=budget,
             weights=weights,
             risk_concentration=risk_concentration,
         )
 
-        BasePortfolio.__init__(self, prices, weights)
-
+        self.prices = prices
         self.seed = seed
+        self.constraints = constraints
 
-        self.construct(constraints=constraints)
+        self.construct()
 
-    def construct(self, **kwargs) -> None:
+    def construct(self) -> None:
         """
         minimize R(w) - alpha * mu.T * w + lambda * w.T Sigma w
         subject to Cw = c, Dw <= d
 
         please visit https://github.com/convexfi/riskparity.py for more portfolio construction information
         """
-        Cmat, cvec, Dmat, dvec = kwargs.get("constraints", (None, None, None, None))
+        Cmat, cvec, Dmat, dvec = self.constraints
         if (Cmat is None) != (cvec is None) or (Dmat is None) != (dvec is None):
             raise ValueError("Invalid constraints")
 
@@ -75,7 +70,7 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
             np.random.seed(self.seed)
 
         # Construct a risk parity portfolio
-        self.design(**kwargs)
+        self.design(Cmat=Cmat, cvec=cvec, Dmat=Dmat, dvec=dvec)
 
     def evaluate(self, prices) -> pd.DataFrame:
         """
