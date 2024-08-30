@@ -24,6 +24,7 @@ pip install neuralstockprophet
 
 ```python
 import neuralstockprophet as nsp
+import pandas as pd
 
 prophet = nsp.NeuralStockProphet(
         stock_names=["AAPL", "GOOGL"],
@@ -35,6 +36,16 @@ prophet = nsp.NeuralStockProphet(
     )
 
 forecasts, real_vals = prophet.forecast()
+
+# Use the forecasted results to design the portfolio and get the assets allocation
+portfolio = nsp.RiskParityPortfolio(prices=forecasts)
+
+# Evaluate the performance of the portfolio with the forecasted results and the true stock prices
+forecast_performance = portfolio.evaluate(forecasts)
+real_performance = portfolio.evaluate(real_vals)
+
+analyze_result_df = pd.concat([forecast_performance, real_performance], axis=0)
+analyze_result_df.index = ["Forecast portfolio", "True portfolio"]
 ```
 
 Get the historical data simply by inputting the stock codes.
