@@ -8,7 +8,7 @@ from .arima import arima_forecast
 from .dataset import TimeSeriesDataset
 from .decompose import multiplicative_decompose
 from .model import AttentionLSTM
-from .utils import get_prediction_trend, visualize_results
+from .utils import dict_to_matrix, get_prediction_trend, visualize_results
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -128,7 +128,7 @@ class NeuralStockProphet:
         self.forecasts = None
         self.real_vals = None
 
-    def load_data(self):
+    def load_data(self) -> None:
         # print("load data")
         self.train_data: Dict[str, TimeSeriesDataset] = {}
         self.test_data: Dict[str, TimeSeriesDataset] = {}
@@ -152,7 +152,7 @@ class NeuralStockProphet:
             )
         self.n_features = self.train_data[self.stock_names[0]].n_features
 
-    def forecast(self, verbose=False) -> Dict[str, np.ndarray]:
+    def forecast(self, verbose=False):
         forecasts = {}
         real_vals = {}
         self.load_data()
@@ -160,7 +160,7 @@ class NeuralStockProphet:
 
         for stock_name in self.stock_names:
             if verbose:
-                print(f"====================Forecasting for {stock_name}====================")
+                print(f"\n====================Forecasting for {stock_name}====================")
 
             train_data = self.train_data[stock_name]
             test_data = self.test_data[stock_name]
@@ -242,5 +242,8 @@ class NeuralStockProphet:
 
         self.forecasts = forecasts
         self.real_vals = real_vals
+
+        forecasts = dict_to_matrix(forecasts)
+        real_vals = dict_to_matrix(real_vals)
 
         return forecasts, real_vals
