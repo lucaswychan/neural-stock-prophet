@@ -11,6 +11,8 @@ from sklearn.metrics import mean_absolute_error
 from .dataset import TimeSeriesDataset
 from .model import Attention
 
+_IMAGE_FOLDER = "results"
+
 sns.set(style="darkgrid", font_scale=1.2)
 
 
@@ -32,16 +34,16 @@ def visualize_results(index, y_true, y_pred, title, file_name):
     plt.text(
         0.5,
         -0.1,
-        f"The mean absolute error is {round(mean_absolute_error(y_true, y_pred), 3)}USD",
+        f"The mean absolute error is {round(mean_absolute_error(y_true, y_pred), 3)} units",
         ha="center",
         va="center",
         transform=plt.gca().transAxes,
     )
 
-    if not os.path.exists("results"):
-        os.makedirs("results")
+    if not os.path.exists(_IMAGE_FOLDER):
+        os.makedirs(_IMAGE_FOLDER)
 
-    file_path = f"results/{file_name}.png"
+    file_path = f"{_IMAGE_FOLDER}/{file_name}.png"
     if os.path.exists(file_path):
         os.remove(file_path)
     plt.savefig(file_path)
@@ -87,7 +89,38 @@ def visualize_timestep_importance(model, dataset: TimeSeriesDataset):
     plt.xlabel("Time Step")
     plt.ylabel("Attention Weight")
 
-    file_path = "Result/attention_weights.png"
+    if not os.path.exists(_IMAGE_FOLDER):
+        os.makedirs(_IMAGE_FOLDER)
+
+    file_path = f"{_IMAGE_FOLDER}/attention_weights.png"
     if os.path.exists(file_path):
         os.remove(file_path)
     plt.savefig(file_path)
+
+
+def dict_to_matrix(data: dict) -> np.ndarray:
+    """
+    Convert a dictionary of NumPy arrays into a matrix.
+
+    Parameter
+    ----------
+    data (dict): A dictionary where keys are arbitrary and values are NumPy arrays.
+
+    Returns
+    -------
+    A NumPy array where each row corresponds to a value from the input dictionary.
+    """
+    if not data:
+        raise ValueError("Input data cannot be empty")
+
+    arrays = list(data.values())
+
+    if not all(isinstance(arr, np.ndarray) for arr in arrays):
+        raise ValueError("All values in the data must be NumPy arrays")
+
+    try:
+        matrix = np.vstack(arrays).T
+    except ValueError as e:
+        raise ValueError("Arrays in the dictionary must have compatible shapes") from e
+
+    return matrix
