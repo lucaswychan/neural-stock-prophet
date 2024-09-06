@@ -1,11 +1,24 @@
 import unittest
+from sklearn.preprocessing import MinMaxScaler
 
 from neuralstockprophet import NeuralStockProphet
 
 
 class TestNeuralStockProphet(unittest.TestCase):
     def setUp(self):
-        self.nsp = NeuralStockProphet()
+        self.stocks = ["AAPL", "GOOGL"]
+        self.train_start_date = "2010-01-01"
+        self.train_end_date = "2019-12-31"
+        self.test_start_date = "2020-01-01"
+        self.test_end_date = "2020-12-31"
+        self.nsp = NeuralStockProphet(
+            stock_names=self.stocks,
+            scaler_func=lambda: MinMaxScaler(feature_range=(0, 1)),
+            train_start_date=self.train_start_date,
+            train_end_date=self.train_end_date,
+            test_start_date=self.test_start_date,
+            test_end_date=self.test_end_date,
+        )
 
     def test_train_model(self):
         # Test if the model is trained successfully
