@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "neuralstockprophet"
-version = "0.0.2"
+version = "0.0.3"
 description = "LSTM-ARIMA with attention mechanisms and multiplicative decomposition for sophisticated stock forecasting."
 license = {file = "LICENSE"}
 authors = [
