@@ -1,4 +1,5 @@
 import unittest
+
 from sklearn.preprocessing import MinMaxScaler
 
 from neuralstockprophet import NeuralStockProphet
