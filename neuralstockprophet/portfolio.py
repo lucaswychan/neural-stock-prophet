@@ -43,6 +43,7 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
         risk_concentration=None,
         seed: Optional[int] = 1016,
     ):
+        self.prices = prices
         self.Sigma = np.cov(self.log_returns.T)
 
         budget = strategy.calculate(self.Sigma)
@@ -55,7 +56,6 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
             risk_concentration=risk_concentration,
         )
 
-        self.prices = prices
         self.seed = seed
         self.constraints = constraints
 
