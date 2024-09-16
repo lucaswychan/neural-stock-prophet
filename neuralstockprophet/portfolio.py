@@ -20,10 +20,16 @@ class BasePortfolio(ABC):
 
     @abstractmethod
     def construct(self, **kwargs):
+        """
+        The method to construct the portfolio.
+        """
         pass
 
     @abstractmethod
-    def evaluate(self):
+    def evaluate(self, prices, **kwargs):
+        """
+        The method to evaluate the portfolio performance.
+        """
         pass
 
 
@@ -37,6 +43,7 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
         risk_concentration=None,
         seed: Optional[int] = 1016,
     ):
+        self.prices = prices
         self.Sigma = np.cov(self.log_returns.T)
 
         budget = strategy.calculate(self.Sigma)
@@ -49,7 +56,6 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
             risk_concentration=risk_concentration,
         )
 
-        self.prices = prices
         self.seed = seed
         self.constraints = constraints
 
@@ -72,7 +78,7 @@ class RiskParityPortfolio(rpp.RiskParityPortfolio, BasePortfolio):
         # Construct a risk parity portfolio
         self.design(Cmat=Cmat, cvec=cvec, Dmat=Dmat, dvec=dvec)
 
-    def evaluate(self, prices) -> pd.DataFrame:
+    def evaluate(self, prices, **kwargs) -> pd.DataFrame:
         """
         Evaluate the portfolio performance with the true stock prices
 
