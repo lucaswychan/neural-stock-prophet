@@ -1,7 +1,7 @@
 # Neural Stock Prophet
 
 [![PyPI](https://img.shields.io/pypi/v/neuralstockprophet?label=pypi%20package&color)](https://pypi.org/project/neuralstockprophet/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/neuralstockprophet?color)](https://pypistats.org/packages/neuralstockprophet)
+[![Downloads](https://pepy.tech/badge/riskparityportfolio)](https://www.pepy.tech/projects/neuralstockprophet)
 [![GitHub license badge](https://img.shields.io/github/license/lucaswychan/neural-stock-prophet?color=blue)](https://opensource.org/licenses/MIT)
 
 **neuralstockprophet** integrates a variety of advanced techniques and algorithms to enhance the robustness, stability, and interoperability of stock price prediction methodologies. By leveraging machine learning, this package aims to accurately forecast the future values of company stocks and other financial assets traded on exchanges. Unlike existing approaches that predominantly focus on model configuration and tuning—often neglecting the inherent variability within the data—NeuralStockProphet addresses these challenges. Furthermore, it effectively mitigates issues related to overfitting and performance constraints that are commonly encountered in machine learning models.
